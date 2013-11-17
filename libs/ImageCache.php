@@ -1,5 +1,5 @@
 <?php
-namespace App\Imagecache\Libs;
+namespace Coxis\Imagecache\Libs;
 
 class ImageCache {
 	private static $presets = array();
