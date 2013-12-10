@@ -9,7 +9,7 @@ class ImageCacheController extends \Coxis\Core\Controller {
 		try {
 			$preset = ImageCache::getPreset($preset);
 		} catch(\Exception $e) {
-			return \Response::setCode(404);
+			return $this->response->setCode(404);
 		}
 		foreach($preset as $op=>$params)
 			switch($op) {
@@ -45,16 +45,12 @@ class ImageCacheController extends \Coxis\Core\Controller {
 			}
 		}
 		else {
-			try {
-				$img = ImageManager::load(_WEB_DIR_.'/'.$request['src']);
-			} catch(\Exception $e) {
-				return \Response::setCode(500);
-			}
+			$img = \Coxis\Utils\ImageManager::load(_WEB_DIR_.'/'.$request['src']);
 			$this->apply($img, $request['preset']);
 			$img->output();
 		}
 		
-		\Response::setHeader('Content-Type', image_type_to_mime_type($img->type));
+		$this->response->setHeader('Content-Type', image_type_to_mime_type($img->type));
 	}
 	
 	/**
@@ -63,6 +59,6 @@ class ImageCacheController extends \Coxis\Core\Controller {
 	public function testAction() {
 		$src = ImageCache::src('img/2.jpg', 'thumb');
 		$content = $src.'<br/><img src="'.$src.'" alt=""/>';
-		return \Response::setContent($content);
+		return $this->response->setContent($content);
 	}
 }
