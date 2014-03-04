@@ -1,10 +1,10 @@
 <?php
-namespace Coxis\Imagecache\Controllers;
+namespace Asgard\Imagecache\Controllers;
 
 /**
 @Prefix('imagecache')
 */
-class ImageCacheController extends \Coxis\Core\Controller {
+class ImageCacheController extends \Asgard\Core\Controller {
 	private function apply($img, $preset) {
 		try {
 			$preset = ImageCache::getPreset($preset);
@@ -45,7 +45,7 @@ class ImageCacheController extends \Coxis\Core\Controller {
 			}
 		}
 		else {
-			$img = \Coxis\Utils\ImageManager::load(_WEB_DIR_.'/'.$request['src']);
+			$img = \Asgard\Utils\ImageManager::load(_WEB_DIR_.'/'.$request['src']);
 			$this->apply($img, $request['preset']);
 			$img->output();
 		}

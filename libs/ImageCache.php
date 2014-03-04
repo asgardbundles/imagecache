@@ -1,5 +1,5 @@
 <?php
-namespace Coxis\Imagecache\Libs;
+namespace Asgard\Imagecache\Libs;
 
 class ImageCache {
 	private static $presets = array();
@@ -33,6 +33,6 @@ class ImageCache {
 	}
 	
 	public static function clearPreset($preset) {
-		\Coxis\Utils\FileManager::rmdir('web/cache/imagecache/'.$preset);
+		\Asgard\Utils\FileManager::rmdir('web/cache/imagecache/'.$preset);
 	}
 }
