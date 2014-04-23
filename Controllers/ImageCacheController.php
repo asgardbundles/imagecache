@@ -57,7 +57,7 @@ class ImageCacheController extends \Asgard\Core\Controller {
 	@Route()
 	*/
 	public function testAction() {
-		$src = ImageCache::src('img/2.jpg', 'thumb');
+		$src = \Asgard\ImageCache\Libs\ImageCache::src('img/2.jpg', 'thumb');
 		$content = $src.'<br/><img src="'.$src.'" alt=""/>';
 		return $this->response->setContent($content);
 	}
