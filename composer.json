@@ -6,6 +6,9 @@
 		"email": "michel@hognerud.net"
 	}],
 	"require": {
-        "asgard/core": "dev-master"
+        "asgard/asgard": "dev-master"
+	},
+	"psr-4": {
+		"Asgard\\Imagecache": "."
 	}
 }
