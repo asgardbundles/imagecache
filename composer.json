@@ -8,7 +8,9 @@
 	"require": {
         "asgard/asgard": "dev-master"
 	},
-	"psr-4": {
-		"Asgard\\Imagecache": "."
+	"autoload": {
+		"psr-4": {
+			"Asgard\\Imagecache": "."
+		}
 	}
 }
