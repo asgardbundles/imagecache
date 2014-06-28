@@ -2,7 +2,7 @@
 namespace Asgard\Imagecache\Libs;
 
 class ImageCache {
-	protected $presets = array();
+	protected $presets = [];
 	protected $app;
 
 	public function __construct($app) {
@@ -39,6 +39,6 @@ class ImageCache {
 	}
 	
 	public function clearPreset($preset) {
-		\Asgard\Utils\FileManager::rmdir($webdir.'/cache/imagecache/'.$preset);
+		\Asgard\File\FileSystem::delete($webdir.'/cache/imagecache/'.$preset);
 	}
 }

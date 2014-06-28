@@ -2,22 +2,27 @@
 namespace Asgard\Imagecache\Controllers;
 
 /**
-@Prefix("imagecache")
-*/
+ * @Prefix("imagecache")
+ */
 class ImageCacheController extends \Asgard\Http\Controller {
-	private function apply($img, $preset) {
+	private function apply(\Imagine\Gd\Image $img, $preset) {
 		try {
 			$preset = $this->app['imagecache']->getPreset($preset);
 		} catch(\Exception $e) {
-			return $this->response->setCode(404);
+			$this->notFound();
 		}
 		foreach($preset as $op=>$params) {
 			switch($op) {
 				case 'resize':
-					$img->resize($params, (isset($params['force']) && $params['force']));
+					if(isset($params['width']) && isset($params['height']) && isset($params['force']) && $params['force'])
+						$img->resize(new Box($params['width'], $params['height']));
+					elseif(isset($params['width']))
+						$img->resize($img->getSize()->widen($params['width']));
+					elseif(isset($params['height']))
+						$img->resize($img->getSize()->heighten($params['height']));
 					break;
 				case 'crop':
-					$img->crop($params);
+					$img->crop(new Point(0, 0), new Box($params['width'], $params['height']));
 					break;
 			}
 		}
@@ -25,34 +30,55 @@ class ImageCacheController extends \Asgard\Http\Controller {
 	}
 
 	/**
-	@Route(value = ":preset/:src", requirements = {
-		"src" : {
-			"type" : "regex",
-			"regex" : ".+"
-		}	
-	})
-	*/
+	 * @Route(value = ":preset/:src", requirements = {
+	 * 	"src" : {
+	 * 		"type" : "regex",
+	 * 		"regex" : ".+"
+	 * 	}	
+	 * })
+	 */
 	public function imgAction(\Asgard\Http\Request $request) {
 		$webdir = $this->app['kernel']['webdir'];
 
+		$imagine = new \Imagine\Gd\Imagine();
 		if($this->app['config']['imagecache']) {
 			$file = $webdir.'/cache/imagecache/'.$request['preset'].'/'.$request['src'];
-			if(file_exists($file)) {
-				$img = \Asgard\Utils\ImageManager::load($file);
-				$img->output();
-			}
+			$mime = image_type_to_mime_type(exif_imagetype($file));
+			if($mime == 'image/jpeg')
+				$format = 'jpg';
+			elseif($mime == 'image/png')
+				$format = 'png';
+			elseif($mime == 'image/gif')
+				$format = 'gif';
+			else
+				throw new \Exception('Invalid image.');
+
+			if(file_exists($file))
+				$imagine->open($file)->show($format);
 			else {
-				$img = \Asgard\Utils\ImageManager::load($webdir.'/'.$request['src']);
-				$this->apply($img, $request['preset'])->save($file);
-				$img->output();
+				$img = $imagine->open($webdir.'/'.$request['src']);
+				$this->apply($img, $request['preset']);
+				$img->save($file);
+				$img->show($format);
 			}
 		}
 		else {
-			$img = \Asgard\Utils\ImageManager::load($webdir.'/'.$request['src']);
+			$file = $webdir.'/'.$request['src'];
+			$mime = image_type_to_mime_type(exif_imagetype($file));
+			if($mime == 'image/jpeg')
+				$format = 'jpg';
+			elseif($mime == 'image/png')
+				$format = 'png';
+			elseif($mime == 'image/gif')
+				$format = 'gif';
+			else
+				throw new \Exception('Invalid image.');
+
+			$img = $imagine->open($file);
 			$this->apply($img, $request['preset']);
-			$img->output();
+			$img->show($format);
 		}
 		
-		$this->response->setHeader('Content-Type', image_type_to_mime_type($img->type));
+		$this->response->setHeader('Content-Type', $mime);
 	}
 }
