@@ -2,11 +2,12 @@
 namespace Asgard\Imagecache\Libs;
 
 class ImageCache {
-	protected $presets = [];
-	protected $app;
+	use \Asgard\Container\ContainerAware;
 
-	public function __construct($app) {
-		$this->app = $app;
+	protected $presets = [];
+
+	public function __construct($container) {
+		$this->container = $container;
 	}
 
 	public function getPreset($presetName) {
@@ -20,11 +21,11 @@ class ImageCache {
 	}
 	
 	public function url($src, $preset) {
-		return $this->app['request']->url->to('imagecache/'.$preset.'/'.trim($src, '/'));
+		return $this->container['request']->url->to('imagecache/'.$preset.'/'.trim($src, '/'));
 	}
 	
 	public function clearFile($file) {
-		$webdir = $this->app['kernel']['webdir'];
+		$webdir = $this->container['kernel']['webdir'];
 		if(!file_exists($webdir.'/cache/imagecache/'))
 			return;
 		if ($handle = opendir($webdir.'/cache/imagecache/')) {

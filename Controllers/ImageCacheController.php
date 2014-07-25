@@ -7,7 +7,7 @@ namespace Asgard\Imagecache\Controllers;
 class ImageCacheController extends \Asgard\Http\Controller {
 	private function apply(\Imagine\Gd\Image $img, $preset) {
 		try {
-			$preset = $this->app['imagecache']->getPreset($preset);
+			$preset = $this->container['imagecache']->getPreset($preset);
 		} catch(\Exception $e) {
 			$this->notFound();
 		}
@@ -38,10 +38,10 @@ class ImageCacheController extends \Asgard\Http\Controller {
 	 * })
 	 */
 	public function imgAction(\Asgard\Http\Request $request) {
-		$webdir = $this->app['kernel']['webdir'];
+		$webdir = $this->container['kernel']['webdir'];
 
 		$imagine = new \Imagine\Gd\Imagine();
-		if($this->app['config']['imagecache']) {
+		if($this->container['config']['imagecache']) {
 			$file = $webdir.'/cache/imagecache/'.$request['preset'].'/'.$request['src'];
 			$mime = image_type_to_mime_type(exif_imagetype($file));
 			if($mime == 'image/jpeg')
@@ -57,7 +57,7 @@ class ImageCacheController extends \Asgard\Http\Controller {
 				$imagine->open($file)->show($format);
 			else {
 				$img = $imagine->open($webdir.'/'.$request['src']);
-				$this->apply($img, $request['preset']);
+				$this->containerly($img, $request['preset']);
 				$img->save($file);
 				$img->show($format);
 			}
@@ -75,7 +75,7 @@ class ImageCacheController extends \Asgard\Http\Controller {
 				throw new \Exception('Invalid image.');
 
 			$img = $imagine->open($file);
-			$this->apply($img, $request['preset']);
+			$this->containerly($img, $request['preset']);
 			$img->show($format);
 		}
 		
