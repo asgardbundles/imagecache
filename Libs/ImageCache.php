@@ -25,7 +25,7 @@ class ImageCache {
 	}
 	
 	public function clearFile($file) {
-		$webdir = $this->container['kernel']['webdir'];
+		$webdir = $this->container['config']['webdir'];
 		if(!file_exists($webdir.'/cache/imagecache/'))
 			return;
 		if ($handle = opendir($webdir.'/cache/imagecache/')) {
