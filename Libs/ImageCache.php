@@ -2,7 +2,7 @@
 namespace Asgard\Imagecache\Libs;
 
 class ImageCache {
-	use \Asgard\Container\ContainerAware;
+	use \Asgard\Container\ContainerAwareTrait;
 
 	protected $presets = [];
 
