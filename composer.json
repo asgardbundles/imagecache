@@ -9,7 +9,7 @@
 	"require": {
         "php": ">=5.4.0",
         "imagine/imagine": "0.*",
-        "asgard/asgard": "dev-master"
+        "asgard/asgard": "v0.*"
 	},
 	"autoload": {
 		"psr-4": {
