@@ -34,7 +34,7 @@ class ImageCacheController extends \Asgard\Http\Controller {
 	 * 	"src" : {
 	 * 		"type" : "regex",
 	 * 		"regex" : ".+"
-	 * 	}	
+	 * 	}
 	 * })
 	 */
 	public function imgAction(\Asgard\Http\Request $request) {
@@ -78,7 +78,7 @@ class ImageCacheController extends \Asgard\Http\Controller {
 			$this->apply($img, $request['preset']);
 			$img->show($format);
 		}
-		
+
 		$this->response->setHeader('Content-Type', $mime);
 	}
 }
