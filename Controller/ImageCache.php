@@ -1,10 +1,10 @@
 <?php
-namespace Asgard\Imagecache\Controllers;
+namespace Asgard\Imagecache\Controller;
 
 /**
  * @Prefix("imagecache")
  */
-class ImageCacheController extends \Asgard\Http\Controller {
+class ImageCache extends \Asgard\Http\Controller {
 	private function apply(\Imagine\Gd\Image $img, $preset) {
 		try {
 			$preset = $this->container['imagecache']->getPreset($preset);
